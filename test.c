@@ -88,7 +88,21 @@ int main ()
 #ifdef test_ing
 
 
-printf("\nQuery Packet:\n");
+printf("\nQuery Packet:%d", inc + 1);
+    if (ModbusTcpTxBuf[7] > 0x80) {
+        switch(ModbusTcpTxBuf[8]) {
+            case 1:
+                printf(" - Function Error");
+                break;
+            case 2:
+                printf(" - Address Error");
+                break;
+            case 3:
+                printf(" - Data Error");
+                break;
+        }
+    }
+printf("\n");
 for (int i = 0; i < 0xC + (Mod[0].Val * 2); i++)
     printf("%02X ", ModbusTcpRxBuf[i]);
 printf("\n");
@@ -105,23 +119,10 @@ for (int i = 0; i < responseLength; i++)
 printf("\n");
 
 if (Test_Res == 1) {
-    if (ModbusTcpTxBuf[7] > 0x80) {
-        switch(ModbusTcpTxBuf[8]) {
-            case 1:
-                printf("Query %d - 0%d Function Error\n", inc + 1, ModbusTcpTxBuf[8]);
-                break;
-            case 2:
-                printf("Query %d - 0%d Address Error\n", inc + 1, ModbusTcpTxBuf[8]);
-                break;
-            case 3:
-                printf("Query %d - 0%d Data Error\n", inc + 1, ModbusTcpTxBuf[8]);
-                break;
-        }
-    } else {
-        printf("Query %d - Test is Passed\n", inc + 1);
-    }
+
+        printf("Test Passed\n", inc + 1);
 } else {
-    printf("Query %d - Test failed\n", inc + 1);
+    printf("Test failed\n", inc + 1);
 }
 
 
